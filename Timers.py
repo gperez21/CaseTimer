@@ -13,6 +13,8 @@ class Timer:
         self.narrative = narrative
         self.latest_start = datetime.now()
         self.latest_end = datetime.now()
+        self.apps_used = ""
+        self.status = "running"
 
     def update_time_on(self, new_time):
         """Update timer time hours to tenth hr. precision"""
@@ -32,16 +34,18 @@ class Timer:
 
     def unpause_timer(self):
         """unpause a paused timer"""
-
-        self.latest_start = datetime.now()
+        if self.status == "stopped":
+            self.status = "running"
+            self.latest_start = datetime.now()
     
     def pause_timer(self):
         """pause timer and update time on"""
-
-        self.latest_end = datetime.now()
-        new_time_on = self._time_dif(self.latest_start, self.latest_end)
-        self.update_time_on(new_time_on)
-        self.write_timer()
+        if self.status == "running":
+            self.status = "stopped"
+            self.latest_end = datetime.now()
+            new_time_on = self._time_dif(self.latest_start, self.latest_end)
+            self.update_time_on(new_time_on)
+            self.write_timer()
 
     def reset_time(self):
         """Reset timer time_on to zero"""
